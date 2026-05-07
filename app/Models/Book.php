@@ -12,6 +12,13 @@ class Book extends Model
 {
     use HasFactory;
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'borrowings')
+            ->withPivot('borrowed_at', 'returned_at')
+            ->withTimestamps();
+    }
+
     public function author()
     {
         return $this->belongsTo(Author::class);
