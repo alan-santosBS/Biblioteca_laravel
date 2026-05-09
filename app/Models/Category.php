@@ -9,6 +9,8 @@ use App\Models\Book;
 class Category extends Model
 {
     use HasFactory;
+    
+    protected $fillable = ['name'];
 
     public function books()
     {
