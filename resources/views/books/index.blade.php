@@ -21,6 +21,7 @@
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Capa</th>
                 <th>Título</th>
                 <th>Paginas</th>
                 <th>Autor</th>
@@ -31,6 +32,9 @@
             @forelse($books as $book)
                 <tr>
                     <td>{{ $book->id }}</td>
+                    <td>
+                        <img src="{{ $book->cover_image ? asset('storage/' . $book->cover_image) : asset('images/default-cover.png') }}" alt="Capa do Livro" class="img-fluid" style="max-width: 80px; height: auto;">
+                    </td>
                     <td>{{ $book->title }}</td>
                     <td>{{ $book->pages }}</td>
                     <td>{{ $book->author->name }}</td>
@@ -57,7 +61,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5">Nenhum livro encontrado.</td>
+                    <td colspan="6">Nenhum livro encontrado.</td>
                 </tr>
             @endforelse
         </tbody>

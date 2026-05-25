@@ -9,6 +9,9 @@
             <strong>Título:</strong> {{ $book->title }}
         </div>
         <div class="card-body">
+            <div class="mb-3">
+                <img src="{{ $book->cover_image ? asset('storage/' . $book->cover_image) : asset('images/default-cover.png') }}" alt="Capa do Livro" class="img-fluid" style="max-width: 240px; height: auto;">
+            </div>
             <p><strong>Paginas:</strong> {{ $book->pages }}</p>
             <p><strong>Autor:</strong>
                 <a href="{{ route('authors.show', $book->author->id) }}">
