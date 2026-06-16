@@ -21,6 +21,8 @@ class BookController extends Controller
     // Salvar livro com input de ID
     public function storeWithId(Request $request)
     {
+        $this->authorize('create', Book::class);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'pages' => 'required|integer|min:1',
@@ -53,6 +55,8 @@ class BookController extends Controller
     // Salvar livro com input select
     public function storeWithSelect(Request $request)
     {
+        $this->authorize('create', Book::class);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'pages' => 'required|integer|min:1',
@@ -83,6 +87,8 @@ class BookController extends Controller
 
     public function update(Request $request, Book $book)
     {
+        $this->authorize('update', $book);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'pages' => 'required|integer|min:1',
@@ -131,6 +137,8 @@ class BookController extends Controller
 
    public function destroy(Book $book)
     {
+        $this->authorize('delete', $book);
+
         if ($book->cover_image) {
             Storage::disk('public')->delete($book->cover_image);
         }
