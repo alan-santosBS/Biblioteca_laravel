@@ -4,9 +4,11 @@
 <div class="container">
     <h1 class="my-4">Lista de Autores</h1>
 
-    <a href="{{ route('authors.create') }}" class="btn btn-success mb-3">
-        <i class="bi bi-plus"></i> Adicionar Autor
-    </a>
+    @if(!auth()->user()->isCliente())
+        <a href="{{ route('authors.create') }}" class="btn btn-success mb-3">
+            <i class="bi bi-plus"></i> Adicionar Autor
+        </a>
+    @endif
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -36,17 +38,19 @@
                             <i class="bi bi-eye"></i> Visualizar
                         </a>
 
-                        <a href="{{ route('authors.edit', $author) }}" class="btn btn-primary btn-sm">
-                            <i class="bi bi-pencil"></i> Editar
-                        </a>
+                        @if(!auth()->user()->isCliente())
+                            <a href="{{ route('authors.edit', $author) }}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
 
-                        <form action="{{ route('authors.destroy', $author) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('Deseja excluir este autor?')">
-                                <i class="bi bi-trash"></i> Excluir
-                            </button>
-                        </form>
+                            <form action="{{ route('authors.destroy', $author) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm" onclick="return confirm('Deseja excluir este autor?')">
+                                    <i class="bi bi-trash"></i> Excluir
+                                </button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @empty

@@ -30,7 +30,7 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
     
-    public function isBibiotecario(): bool
+    public function isBibliotecario(): bool
     {
         return $this->role === 'bibliotecario';
     }

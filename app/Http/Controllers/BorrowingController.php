@@ -11,6 +11,11 @@ class BorrowingController extends Controller
 {
     public function store(Request $request, Book $book)
     {
+        // Trava Back-end: Clientes não podem registrar empréstimos
+        if ($request->user()->isCliente()) {
+            abort(403, 'Ação não autorizada para clientes.');
+        }
+
         $request->validate([
             'user_id' => 'required|exists:users,id',
         ]);
@@ -24,8 +29,13 @@ class BorrowingController extends Controller
         return redirect()->route('books.show', $book)->with('success', 'Empréstimo registrado com sucesso.');
     }
 
-    public function returnBook(Borrowing $borrowing)
+    public function returnBook(Request $request, Borrowing $borrowing)
     {
+        // Trava Back-end: Clientes não podem registrar devoluções
+        if ($request->user()->isCliente()) {
+            abort(403, 'Ação não autorizada para clientes.');
+        }
+
         $borrowing->update([
             'returned_at' => now(),
         ]);

@@ -10,12 +10,14 @@
         </div>
     @endif
 
-    <a href="{{ route('books.create.id') }}" class="btn btn-success mb-3">
-        <i class="bi bi-plus"></i> Adicionar Livro (Com ID)
-    </a>
-    <a href="{{ route('books.create.select') }}" class="btn btn-primary mb-3">
-        <i class="bi bi-plus"></i> Adicionar Livro (Com Select)
-    </a>
+    @if(!auth()->user()->isCliente())
+        <a href="{{ route('books.create.id') }}" class="btn btn-success mb-3">
+            <i class="bi bi-plus"></i> Adicionar Livro (Com ID)
+        </a>
+        <a href="{{ route('books.create.select') }}" class="btn btn-primary mb-3">
+            <i class="bi bi-plus"></i> Adicionar Livro (Com Select)
+        </a>
+    @endcan
 
     <table class="table table-striped">
         <thead>
@@ -45,18 +47,20 @@
                         </a>
 
                         <!-- Botão de Editar -->
-                        <a href="{{ route('books.edit', $book->id) }}" class="btn btn-primary btn-sm">
-                            <i class="bi bi-pencil"></i> Editar
-                        </a>
+                        @if(!auth()->user()->isCliente())
+                            <a href="{{ route('books.edit', $book->id) }}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
 
-                        <!-- Botão de Deletar -->
-                        <form action="{{ route('books.destroy', $book->id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('Deseja excluir este livro?')">
-                                <i class="bi bi-trash"></i> Deletar
-                            </button>
-                        </form>
+                            <!-- Botão de Deletar -->
+                            <form action="{{ route('books.destroy', $book->id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm" onclick="return confirm('Deseja excluir este livro?')">
+                                    <i class="bi bi-trash"></i> Deletar
+                                </button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @empty

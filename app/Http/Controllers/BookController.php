@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Book;
 use App\Models\Publisher;
@@ -15,6 +16,7 @@ class BookController extends Controller
     // Formulário com input de ID
     public function createWithId()
     {
+        $this->authorize('create', Book::class);
         return view('books.create-id');
     }
 
@@ -45,6 +47,7 @@ class BookController extends Controller
     // Formulário com input select
     public function createWithSelect()
     {
+        $this->authorize('create', Book::class);
         $publishers = Publisher::all();
         $authors = Author::all();
         $categories = Category::all();
@@ -78,6 +81,7 @@ class BookController extends Controller
 
     public function edit(Book $book)
     {
+        $this->authorize('update', $book);
         $publishers = Publisher::all();
         $authors = Author::all();
         $categories = Category::all();

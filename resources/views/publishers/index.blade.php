@@ -4,9 +4,11 @@
 <div class="container">
     <h1 class="my-4">Lista de Editoras</h1>
 
-    <a href="{{ route('publishers.create') }}" class="btn btn-success mb-3">
-        <i class="bi bi-plus"></i> Adicionar Editora
-    </a>
+    @if(!auth()->user()->isCliente())
+        <a href="{{ route('publishers.create') }}" class="btn btn-success mb-3">
+            <i class="bi bi-plus"></i> Adicionar Editora
+        </a>
+    @endif
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -34,17 +36,19 @@
                             <i class="bi bi-eye"></i> Visualizar
                         </a>
 
-                        <a href="{{ route('publishers.edit', $publisher) }}" class="btn btn-primary btn-sm">
-                            <i class="bi bi-pencil"></i> Editar
-                        </a>
+                        @if(!auth()->user()->isCliente())
+                            <a href="{{ route('publishers.edit', $publisher) }}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
 
-                        <form action="{{ route('publishers.destroy', $publisher) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('Deseja excluir esta editora?')">
-                                <i class="bi bi-trash"></i> Excluir
-                            </button>
-                        </form>
+                            <form action="{{ route('publishers.destroy', $publisher) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm" onclick="return confirm('Deseja excluir esta editora?')">
+                                    <i class="bi bi-trash"></i> Excluir
+                                </button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @empty

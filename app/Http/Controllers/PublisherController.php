@@ -17,12 +17,15 @@ class PublisherController extends Controller
     // Mostra o formulario para criar uma nova editora
     public function create()
     {
+        $this->authorize('create', Publisher::class);
         return view('publishers.create');
     }
 
     // Armazena uma nova editora no banco de dados
     public function store(Request $request)
     {
+        $this->authorize('create', Publisher::class);
+        
         $request->validate([
             'name' => 'required|string|unique:publishers,name|max:255',
             'address' => 'nullable|string|max:255',
@@ -42,12 +45,15 @@ class PublisherController extends Controller
     // Mostra o formulario para editar uma editora existente
     public function edit(Publisher $publisher)
     {
+        $this->authorize('update', $publisher);
         return view('publishers.edit', compact('publisher'));
     }
 
     // Atualiza uma editora no banco de dados
     public function update(Request $request, Publisher $publisher)
     {
+        $this->authorize('update', $publisher);
+        
         $request->validate([
             'name' => 'required|string|unique:publishers,name,' . $publisher->id . '|max:255',
             'address' => 'nullable|string|max:255',
@@ -61,6 +67,9 @@ class PublisherController extends Controller
     // Remove uma editora do banco de dados
     public function destroy(Publisher $publisher)
     {
+        // Ajustado para 'delete' para conversar corretamente com as regras da Policy
+        $this->authorize('delete', $publisher);
+        
         $publisher->delete();
 
         return redirect()->route('publishers.index')->with('success', 'Editora excluida com sucesso.');

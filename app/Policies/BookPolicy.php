@@ -10,13 +10,13 @@ class BookPolicy
     public function create(User $user): bool
     {
         // Só admin e bibliotecário podem criar
-        return $user->isAdmin() || $user->isBibiotecario();
+        return $user->isAdmin() || $user->isBibliotecario();
     }
 
     public function update(User $user, Book $book): bool
     {
         // Só admin e bibliotecário podem editar
-        return $user->isAdmin() || $user->isBibiotecario();
+        return $user->isAdmin() || $user->isBibliotecario();
     }
 
     public function delete(User $user, Book $book): bool

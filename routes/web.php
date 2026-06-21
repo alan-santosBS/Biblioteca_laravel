@@ -8,34 +8,46 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BorrowingController;
 
+// Rota pública inicial (Acessível sem login)
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Rotas automáticas de autenticação (Login, Registro, etc.)
 Auth::routes();
 
+// Rota da Dashboard interna (Já redireciona para home)
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::resource('categories', CategoryController::class);
-Route::resource('authors', AuthorController::class);
-Route::resource('publishers', PublisherController::class);
 
-// Rotas para criação de livros
-Route::get('/books/create-id-number', [BookController::class, 'createWithId'])->name('books.create.id');
-Route::post('/books/create-id-number', [BookController::class, 'storeWithId'])->name('books.store.id');
+// ================================================================
+// GRUPO DE SEGURANÇA: Só quem está LOGADO acessa o que está aqui dentro
+// ================================================================
+Route::middleware(['auth'])->group(function () {
 
-Route::get('/books/create-select', [BookController::class, 'createWithSelect'])->name('books.create.select');
-Route::post('/books/create-select', [BookController::class, 'storeWithSelect'])->name('books.store.select');
+    Route::resource('categories', CategoryController::class);
+    Route::resource('authors', AuthorController::class);
+    Route::resource('publishers', PublisherController::class);
 
-// Rotas RESTful para index, show, edit, update, delete (tem que ficar depois das rotas /books/create-id-number e /books/create-select)
-Route::resource('books', BookController::class)->except(['create', 'store']);
+    // Rotas para criação de livros
+    Route::get('/books/create-id-number', [BookController::class, 'createWithId'])->name('books.create.id');
+    Route::post('/books/create-id-number', [BookController::class, 'storeWithId'])->name('books.store.id');
 
-Route::resource('users', UserController::class)->except(['create', 'store', 'destroy']);
+    Route::get('/books/create-select', [BookController::class, 'createWithSelect'])->name('books.create.select');
+    Route::post('/books/create-select', [BookController::class, 'storeWithSelect'])->name('books.store.select');
 
-// Rota para registrar um empréstimo
-Route::post('/books/{book}/borrow', [BorrowingController::class, 'store'])->name('books.borrow');
+    // Rotas RESTful para index, show, edit, update, delete
+    Route::resource('books', BookController::class)->except(['create', 'store']);
 
-// Rota para listar o histórico de empréstimos de um usuário
-Route::get('/users/{user}/borrowings', [BorrowingController::class, 'userBorrowings'])->name('users.borrowings');
+    // Gerenciamento de usuários
+    Route::resource('users', UserController::class)->except(['create', 'store', 'destroy']);
 
-// Rota para registrar a devolução
-Route::patch('/borrowings/{borrowing}/return', [BorrowingController::class, 'returnBook'])->name('borrowings.return');
+    // Rota para registrar um empréstimo
+    Route::post('/books/{book}/borrow', [BorrowingController::class, 'store'])->name('books.borrow');
+
+    // Rota para listar o histórico de empréstimos de um usuário
+    Route::get('/users/{user}/borrowings', [BorrowingController::class, 'userBorrowings'])->name('users.borrowings');
+
+    // Rota para registrar a devolução
+    Route::patch('/borrowings/{borrowing}/return', [BorrowingController::class, 'returnBook'])->name('borrowings.return');
+
+});

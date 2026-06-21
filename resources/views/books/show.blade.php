@@ -4,7 +4,7 @@
 <div class="container">
     <h1 class="my-4">Detalhes do Livro</h1>
 
-    <div class="card">
+    <div class="card mb-4">
         <div class="card-header">
             <strong>Título:</strong> {{ $book->title }}
         </div>
@@ -12,7 +12,7 @@
             <div class="mb-3">
                 <img src="{{ $book->cover_image ? asset('storage/' . $book->cover_image) : asset('images/default-cover.png') }}" alt="Capa do Livro" class="img-fluid" style="max-width: 240px; height: auto;">
             </div>
-            <p><strong>Paginas:</strong> {{ $book->pages }}</p>
+            <p><strong>Páginas:</strong> {{ $book->pages }}</p>
             <p><strong>Autor:</strong>
                 <a href="{{ route('authors.show', $book->author->id) }}">
                     {{ $book->author->name }}
@@ -30,8 +30,8 @@
             </p>
         </div>
 
-        
-            <div class="card-header">Registrar Empréstimo</div>
+        @if(auth()->user()->isAdmin() || auth()->user()->isBibliotecario())
+            <div class="card-header border-top">Registrar Empréstimo</div>
             <div class="card-body">
                 <form action="{{ route('books.borrow', $book) }}" method="POST">
                     @csrf
@@ -47,8 +47,7 @@
                     <button type="submit" class="btn btn-success">Registrar Empréstimo</button>
                 </form>
             </div>
-        
-
+        @endif
     </div>
 
     <div class="card">
@@ -67,36 +66,34 @@
                         </tr>
                     </thead>
                     <tbody>
-        @foreach($book->users as $user)
-            <tr>
-                <td>
-                    <a href="{{ route('users.show', $user->id) }}">
-                        {{ $user->name }}
-                    </a>
-                </td>
-                <td>{{ $user->pivot->borrowed_at }}</td>
-                <td>{{ $user->pivot->returned_at ?? 'Em Aberto' }}</td>
-                <td>
-                    @if(is_null($user->pivot->returned_at))
-                        <form action="{{ route('borrowings.return', $user->pivot->id) }}" method="POST">
-                            @csrf
-                            @method('PATCH')
-                            <button class="btn btn-warning btn-sm">Devolver</button>
-                        </form>
-                    @endif
-                </td>
-            </tr>
-        @endforeach
-    </tbody>
+                        @foreach($book->users as $user)
+                            <tr>
+                                <td>
+                                    <a href="{{ route('users.show', $user->id) }}">
+                                        {{ $user->name }}
+                                    </a>
+                                </td>
+                                <td>{{ $user->pivot->borrowed_at }}</td>
+                                <td>{{ $user->pivot->returned_at ?? 'Em Aberto' }}</td>
+                                <td>
+                                    @if(is_null($user->pivot->returned_at) && (auth()->user()->isAdmin() || auth()->user()->isBibliotecario()))
+                                        <form action="{{ route('borrowings.return', $user->pivot->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button class="btn btn-warning btn-sm">Devolver</button>
+                                        </form>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
                 </table>
             @endif
         </div>
     </div>
 
-
     <a href="{{ route('books.index') }}" class="btn btn-secondary mt-3">
         <i class="bi bi-arrow-left"></i> Voltar
     </a>
-    
 </div>
 @endsection

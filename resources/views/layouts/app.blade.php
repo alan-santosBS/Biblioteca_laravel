@@ -4,19 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-    <!-- icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
@@ -31,14 +27,40 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
+                        @auth
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('books.*') ? 'active fw-bold text-primary' : '' }}" href="{{ route('books.index') }}">
+                                    <i class="bi bi-book"></i> Livros
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('authors.*') ? 'active fw-bold text-primary' : '' }}" href="{{ route('authors.index') }}">
+                                    <i class="bi bi-person-badge"></i> Autores
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('publishers.*') ? 'active fw-bold text-primary' : '' }}" href="{{ route('publishers.index') }}">
+                                    <i class="bi bi-building"></i> Editoras
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('categories.*') ? 'active fw-bold text-primary' : '' }}" href="{{ route('categories.index') }}">
+                                    <i class="bi bi-tags"></i> Categorias
+                                </a>
+                            </li>
 
+                            @if(auth()->user()->isAdmin())
+                                <li class="nav-item ms-2">
+                                    <a class="nav-link text-danger {{ request()->routeIs('users.*') ? 'active fw-bold' : '' }}" href="{{ route('users.index') }}">
+                                        <i class="bi bi-people-fill"></i> Gerenciar Usuários
+                                    </a>
+                                </li>
+                            @endif
+                        @endauth
                     </ul>
 
-                    <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
