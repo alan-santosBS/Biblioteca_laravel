@@ -34,9 +34,13 @@
             @forelse($books as $book)
                 <tr>
                     <td>{{ $book->id }}</td>
-                    <td>
-                        <img src="{{ $book->cover_image ? asset('storage/' . $book->cover_image) : asset('images/default-cover.png') }}" alt="Capa do Livro" class="img-fluid" style="max-width: 80px; height: auto;">
-                    </td>
+                        <td> <!-- capa do livro  -->
+                            @if($book->cover_image)
+                                <img src="{{ asset('storage/' . $book->cover_image) }}" alt="Capa de {{ $book->title }}" style="width: 50px; height: auto;">
+                            @else
+                                <img src="{{ asset('images/default-cover.jpg') }}" alt="Capa Padrão" style="width: 50px; height: auto;">
+                            @endif
+                        </td>
                     <td>{{ $book->title }}</td>
                     <td>{{ $book->pages }}</td>
                     <td>{{ $book->author->name }}</td>
