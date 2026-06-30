@@ -21,8 +21,8 @@ class BookPolicy
 
     public function delete(User $user, Book $book): bool
     {
-        // Só admin pode deletar
-        return $user->isAdmin();
+        // Só admin e bibliotecario pode deletar
+        return $user->isAdmin() || $user->isBibliotecario();
     }
 
     public function viewAny(User $user): bool
